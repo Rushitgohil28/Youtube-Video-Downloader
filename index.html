@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube Media Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #FF0000;
+        }
+
+        /* Fluid Waterdrop Animation */
+        .fluid-container {
+            filter: url('#goo');
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .drop {
+            background: var(--primary-red);
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.4;
+            animation: move 15s infinite ease-in-out;
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50vw, 20vh) scale(1.2); }
+            66% { transform: translate(20vw, 80vh) scale(0.8); }
+        }
+
+        /* Smooth Transitions */
+        body, nav, .glass-card, input, button {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Themed Glassmorphism */
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+        }
+
+        .dark .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .light .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="dark:bg-[#0f0f0f] bg-[#fcfcfc] dark:text-white text-gray-900 min-h-screen">
+
+    <div class="fluid-container">
+        <div class="drop w-96 h-96 -top-20 -left-20"></div>
+        <div class="drop w-72 h-72 top-1/2 right-0" style="animation-delay: -5s;"></div>
+        <div class="drop w-64 h-64 bottom-0 left-1/4" style="animation-delay: -2s;"></div>
+    </div>
+
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <div class="flex items-center gap-2 group cursor-pointer">
+            <i class="fab fa-youtube text-3xl text-[#FF0000]"></i>
+            <span class="text-xl font-extrabold tracking-tight">Youtube Media Downloader</span>
+        </div>
+        
+        <button id="themeToggle" class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:scale-110 transition-transform">
+            <i id="themeIcon" class="fas fa-moon text-[#FF0000] text-lg"></i>
+        </button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-20 pb-12 text-center">
+        <h1 class="text-5xl md:text-7xl font-black mb-6">
+            Download <span class="text-[#FF0000]">Youtube</span> <br>In One Click.
+        </h1>
+        <p class="dark:text-gray-400 text-gray-500 text-lg mb-12">Supports Shorts, Videos, and Livestreams.</p>
+
+        <div class="glass-card p-4 md:p-8 mb-12">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" 
+                       id="videoUrl"
+                       placeholder="Paste link here..." 
+                       class="flex-1 p-4 rounded-xl dark:bg-black/30 bg-white border-2 border-transparent focus:border-[#FF0000] outline-none text-lg">
+                <button onclick="showResults()" class="bg-[#FF0000] hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-red-500/30 active:scale-95">
+                    Analyze
+                </button>
+            </div>
+        </div>
+
+        <div id="resultArea" class="hidden grid md:grid-cols-2 gap-8 text-left animate-in fade-in slide-in-from-bottom-5 duration-500">
+            <div class="glass-card overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="font-bold text-xl mb-4 truncate">High Quality Media Detected</h3>
+                    <button class="w-full border-2 border-[#FF0000] text-[#FF0000] py-2 rounded-lg font-bold hover:bg-[#FF0000] hover:text-white">
+                        Download Thumbnail
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card p-6">
+                <h3 class="font-bold text-xl mb-4">Select Quality</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 rounded-lg dark:bg-white/5 bg-red-50 hover:bg-[#FF0000] hover:text-white cursor-pointer group">
+                        <span>Video (4K)</span>
+                        <span class="font-bold text-[#FF0000] group-hover:text-white">MP4</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 rounded-lg dark:bg-white/5 bg-red-50 hover:bg-[#FF0000] hover:text-white cursor-pointer group">
+                        <span>Video (1080p)</span>
+                        <span class="font-bold text-[#FF0000] group-hover:text-white">MP4</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 rounded-lg dark:bg-white/5 bg-red-50 hover:bg-[#FF0000] hover:text-white cursor-pointer group">
+                        <span>Audio Only</span>
+                        <span class="font-bold text-[#FF0000] group-hover:text-white">MP3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <svg class="hidden">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" />
+            </filter>
+        </defs>
+    </svg>
+
+    <script>
+        const API = "http://localhost:5000";
+        
+        async function showResults() {
+            const url = document.getElementById("videoUrl").value;
+            if (!url) return alert("Enter URL");
+        
+            const res = await fetch(`${API}/info?url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+        
+            document.getElementById("resultArea").classList.remove("hidden");
+        
+            // Update thumbnail preview
+            document.querySelector("#resultArea img").src = data.thumbnail;
+        
+            // Update title
+            document.querySelector("#resultArea h3").innerText = data.title;
+        
+            const buttons = document.querySelectorAll(".space-y-3 > div");
+        
+            // 4K button
+            buttons[0].onclick = () => download(url, "2160");
+        
+            // 1080p button
+            buttons[1].onclick = () => download(url, "1080");
+        
+            // MP3
+            buttons[2].onclick = () => download(url, "mp3");
+        
+            // Thumbnail button
+            document.querySelector(".glass-card button").onclick = () => {
+                window.open(`${API}/thumbnail?url=${encodeURIComponent(url)}`);
+            };
+        }
+        
+        function download(url, quality) {
+            window.open(`${API}/download?url=${encodeURIComponent(url)}&quality=${quality}`);
+        }
+        </script>
+</body>
+</html>
